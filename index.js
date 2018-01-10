@@ -24,11 +24,22 @@ var cmd = function (cmd, cwd, callback) {
 
     var result = exec(
         cmd,
-        {cwd: cwd},
-        async ? callback : undefined
+        {cwd: cwd}
     );
 
-    return result.code !== 0 && !async ? result.stdout : undefined;
+    if (debug) {
+        result.stdout.on('data', (data) => {
+            console.log(data);
+        });
+        
+        result.stderr.on('data', (data) => {
+            console.log(data);
+        });
+    }
+    
+    result.on('close', (code) => {
+        callback(code)
+    });
 };
 
 /**
@@ -38,7 +49,7 @@ var cmd = function (cmd, cwd, callback) {
 var buildCommand = function () {
     return [CORDOVA_PATH]
         .concat(Array.prototype.map.call(arguments || [], function (arg) {
-            return '\'' + arg.replace("'", "\\'") + '\'';
+            return arg;
         })).join(' ');
 };
 
