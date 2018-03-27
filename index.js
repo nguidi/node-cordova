@@ -27,15 +27,13 @@ var cmd = function (cmd, cwd, callback) {
         {cwd: cwd}
     );
 
-    if (debug) {
-        result.stdout.on('data', (data) => {
-            console.log(data);
-        });
-        
-        result.stderr.on('data', (data) => {
-            console.log(data);
-        });
-    }
+    result.stdout.on('data', (data) => {
+        console.log(data);
+    });
+
+    result.stderr.on('data', (data) => {
+        console.log(data);
+    });
     
     result.on('close', (code) => {
         callback(code)
